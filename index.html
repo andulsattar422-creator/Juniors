@@ -3,145 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Junior Cricket League | Premium Hub</title>
-    <!-- SEO Meta Tags for Google Search -->
-    <meta name="description" content="Official website for Junior Cricket League. Register your team online, check match schedules, points table, and player statistics.">
+    <title>Junior Cricket League - Live Tournament</title>
     <link rel="stylesheet" href="./style.css">
-    <!-- FontAwesome for Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="dark-theme">
 
-    <!-- Navigation Bar -->
+    <!-- Header / Navbar -->
     <header>
-        <div class="logo">🏏 JCL <span>LEAGUE</span></div>
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#schedule">Schedule</a>
-            <a href="#gallery">Gallery</a>
-            <a href="#stats">Stats</a>
-            <a href="#register" class="btn-nav">Register Team</a>
-        </nav>
+        <div class="logo">🏏 JCL Live</div>
         <button id="theme-toggle"><i class="fas fa-moon"></i></button>
     </header>
 
-    <!-- Hero / Home Section -->
-    <section id="home" class="hero-section">
-        <div class="hero-content">
-            <h1>CHAMPIONS ARE MADE HERE</h1>
-            <p>Welcome to the ultimate Junior Cricket League tournament hub.</p>
-            <a href="#register" class="btn-primary">Register Now <i class="fas fa-arrow-right"></i></a>
-        </div>
-    </section>
+    <!-- Main Content Grid -->
+    <main style="padding: 2rem 5%;">
+        
+        <!-- 1. Next Match Schedule Section -->
+        <section class="section-container">
+            <h2><i class="fas fa-clock" style="color: #0284c7;"></i> Upcoming Match Details</h2>
+            <div class="match-card">
+                <div class="match-date"><i class="fas fa-calendar-alt"></i> Loading Live Date...</div>
+                <div class="teams">Loading Teams...</div>
+                <div class="venue"><i class="fas fa-map-marker-alt"></i> Loading Venue...</div>
+            </div>
+        </section>
 
-    <!-- Points Table Section -->
-    <section class="section-container">
-        <h2 class="section-title">Tournament Points Table</h2>
-        <div class="table-responsive">
-            <table class="points-table">
+        <!-- 2. Points Table Section -->
+        <section class="section-container" style="margin-top: 2.5rem;">
+            <h2><i class="fas fa-chart-bar" style="color: #0284c7;"></i> Tournament Standings</h2>
+            <table class="points-table" style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
                 <thead>
-                    <tr>
-                        <th>Pos</th>
-                        <th>Team</th>
-                        <th>P</th>
-                        <th>W</th>
-                        <th>L</th>
-                        <th>Pts</th>
+                    <tr style="background: rgba(255,255,255,0.05); text-align: left;">
+                        <th style="padding: 10px;">Pos</th>
+                        <th style="padding: 10px;">Team</th>
+                        <th style="padding: 10px;">P</th>
+                        <th style="padding: 10px;">W</th>
+                        <th style="padding: 10px;">L</th>
+                        <th style="padding: 10px;">PTS</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>1</td><td>Lahore Tigers 🐯</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-                    <tr><td>2</td><td>Karachi Kings 👑</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-                    <tr><td>3</td><td>Islamabad United 🦁</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr>
+                        <td style="padding: 10px;">1</td>
+                        <td style="padding: 10px; font-weight: bold;">Lahore Tigers 🐯</td>
+                        <td style="padding: 10px;">0</td><td style="padding: 10px;">0</td><td style="padding: 10px;">0</td><td style="padding: 10px; font-weight: bold; color: #25d366;">0</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">2</td>
+                        <td style="padding: 10px; font-weight: bold;">Karachi Kings 👑</td>
+                        <td style="padding: 10px;">0</td><td style="padding: 10px;">0</td><td style="padding: 10px;">0</td><td style="padding: 10px; font-weight: bold; color: #25d366;">0</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;">3</td>
+                        <td style="padding: 10px; font-weight: bold;">Islamabad United 🦁</td>
+                        <td style="padding: 10px;">0</td><td style="padding: 10px;">0</td><td style="padding: 10px;">0</td><td style="padding: 10px; font-weight: bold; color: #25d366;">0</td>
+                    </tr>
                 </tbody>
             </table>
-        </div>
-    </section>
+        </section>
 
-    <!-- Schedule / Calendar Section -->
-    <section id="schedule" class="section-container bg-alt">
-        <h2 class="section-title">Match Calendar & Fixtures</h2>
-        <div class="schedule-grid">
-            <div class="match-card">
-                <div class="match-date"><i class="fas fa-calendar-alt"></i> Sunday - 21 June</div>
-                <div class="teams">Tigers vs Kings</div>
-                <div class="venue"><i class="fas fa-map-marker-alt"></i> Local Ground A - 4:00 PM</div>
-            </div>
-            <div class="match-card">
-                <div class="match-date"><i class="fas fa-calendar-alt"></i> Saturday - 27 June</div>
-                <div class="teams">United vs Tigers</div>
-                <div class="venue"><i class="fas fa-map-marker-alt"></i> Local Ground B - 4:00 PM</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Gallery Section -->
-    <section id="gallery" class="section-container">
-        <h2 class="section-title">Match Gallery</h2>
-        <div class="gallery-grid">
-            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=500" alt="Match Pic"></div>
-            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1624526267942-ab0ff8a3e972?w=500" alt="Match Pic"></div>
-            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=500" alt="Match Pic"></div>
-        </div>
-    </section>
-
-    <!-- Player Stats Section -->
-    <section id="stats" class="section-container bg-alt">
-        <h2 class="section-title">Top Performers</h2>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <i class="fas fa-award stat-icon"></i>
-                <h3>Top Batsman</h3>
-                <p class="stat-name">Ali Ahmed</p>
-                <p class="stat-value">120 Runs</p>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-baseball-ball stat-icon"></i>
-                <h3>Top Bowler</h3>
-                <p class="stat-name">Zain Khan</p>
-                <p class="stat-value">5 Wickets</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Registration Section -->
-    <section id="register" class="section-container">
-        <h2 class="section-title">Online Team Registration</h2>
-        <div class="form-container">
-            <form id="registrationForm">
-                <div class="form-group">
-                    <label>Team Name:</label>
-                    <input type="text" id="teamName" required placeholder="Enter team name">
+        <!-- 3. Top Performers Section -->
+        <section class="section-container" style="margin-top: 2.5rem;">
+            <h2><i class="fas fa-trophy" style="color: #0284c7;"></i> Top Performers</h2>
+            <div class="schedule-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 1rem;">
+                <div class="match-card" style="text-align: center;">
+                    <i class="fas fa-batting-top" style="font-size: 2rem; color: #0284c7;"></i>
+                    <h4>Top Batsman</h4>
+                    <p class="stat-name" style="font-weight: bold; margin-top: 5px;">Loading...</p>
+                    <p class="stat-value" style="color: #25d366; font-size: 1.2rem;">0 Runs</p>
                 </div>
-                <div class="form-group">
-                    <label>Captain Name:</label>
-                    <input type="text" id="captainName" required placeholder="Enter captain name">
+                <div class="match-card" style="text-align: center;">
+                    <i class="fas fa-baseball-ball" style="font-size: 2rem; color: #0284c7;"></i>
+                    <h4>Top Bowler</h4>
+                    <p class="stat-name" style="font-weight: bold; margin-top: 5px;">Loading...</p>
+                    <p class="stat-value" style="color: #25d366; font-size: 1.2rem;">0 Wkts</p>
                 </div>
-                <div class="form-group">
-                    <label>Contact Number:</label>
-                    <input type="tel" id="contactNum" required placeholder="e.g. 03001234567">
-                </div>
-                <div class="form-group">
-                    <label>Player List (Comma Separated):</label>
-                    <textarea id="playerList" rows="4" required placeholder="Player 1, Player 2, Player 3..."></textarea>
-                </div>
-                <button type="submit" class="btn-submit">Submit via WhatsApp <i class="fab fa-whatsapp"></i></button>
-            </form>
-        </div>
-    </section>
+            </div>
+        </section>
 
-    <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/923024337352" class="whatsapp-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+        <!-- 4. LIVE MATCH GALLERY SECTION -->
+        <section class="section-container" style="margin-top: 2.5rem;">
+            <h2><i class="fas fa-images" style="color: #0284c7;"></i> Match Gallery</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 1rem;">Live updates from the ground.</p>
+            
+            <!-- Yeh grid automatic fill hogi jab aap admin se upload karenge -->
+            <div id="website-gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px;">
+                <!-- Images cloud se load hokar yahan aayengi -->
+            </div>
+        </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2026 Junior Cricket League. Built with Passion.</p>
-        <!-- Khufiya Admin Link -->
-        <p style="margin-top: 15px;"><a href="./admin.html" style="color: rgba(255,255,255,0.2); text-decoration: none; font-size: 0.8rem; letter-spacing: 1px;">🔒 Admin Control Panel</a></p>
-    </footer>
+    </main>
 
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    
     <script src="./script.js"></script>
 </body>
 </html>
