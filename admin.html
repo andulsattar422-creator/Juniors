@@ -6,9 +6,82 @@
     <title>JCL - Cloud Admin Dashboard</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Professional Upload Section Styling */
+        .upload-dropzone {
+            border: 2px dashed rgba(2, 132, 199, 0.4);
+            background: rgba(15, 23, 42, 0.6);
+            padding: 2rem 1rem;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        .upload-dropzone:hover {
+            border-color: #0284c7;
+            background: rgba(2, 132, 199, 0.05);
+        }
+        .upload-dropzone i {
+            font-size: 2.5rem;
+            color: #0284c7;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        .upload-dropzone p {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin: 0;
+        }
+        .upload-dropzone input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-selected-name {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #25d366;
+            font-weight: 600;
+        }
+        .btn-upload-prof {
+            background: #25d366;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+            transition: all 0.3s ease;
+        }
+        .btn-upload-prof:hover {
+            background: #1ebd54;
+            transform: translateY(-1px);
+        }
+    </style>
 </head>
 <body class="dark-theme">
 
+    <!-- Theme Toggle Button (Top Right) -->
+    <div style="position: absolute; top: 15px; right: 20px; z-index: 10000;">
+        <button id="theme-toggle" style="background: var(--primary-color, #0284c7); color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <!-- Password Login Section -->
     <div id="login-overlay" style="position: fixed; top:0; left:0; width:100%; height:100%; background: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center;">
         <div class="form-container" style="text-align: center; max-width: 450px;">
             <h2>🔒 Admin Security Access</h2>
@@ -21,6 +94,7 @@
         </div>
     </div>
 
+    <!-- Main Admin Dashboard -->
     <div id="admin-dashboard" style="display: none; padding: 2rem 5%;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
             <h2>🛠️ JCL Live Tournament Editor (Cloud)</h2>
@@ -28,6 +102,7 @@
         </div>
 
         <div class="schedule-grid">
+            <!-- Update Points Table Box -->
             <div class="match-card">
                 <h3><i class="fas fa-chart-bar" style="color: #0284c7; margin-right: 8px;"></i> Points Table Standings</h3>
                 <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Modify wins, losses, and overall standings.</p>
@@ -45,6 +120,7 @@
                 <button onclick="savePointsTable()" class="btn-submit" style="background: #0284c7;">Apply Standings</button>
             </div>
 
+            <!-- Update Schedule Box -->
             <div class="match-card">
                 <h3><i class="fas fa-clock" style="color: #0284c7; margin-right: 8px;"></i> Next Match Details</h3>
                 <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Update the upcoming match card instantly.</p>
@@ -54,6 +130,7 @@
                 <button onclick="saveMatchSchedule()" class="btn-submit" style="background: #0284c7;">Update Fixture</button>
             </div>
 
+            <!-- Update Stats Box -->
             <div class="match-card">
                 <h3><i class="fas fa-trophy" style="color: #0284c7; margin-right: 8px;"></i> Tournament Performers</h3>
                 <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Highlight the tournament top batsman and bowler.</p>
@@ -64,22 +141,44 @@
                 <button onclick="savePlayerStats()" class="btn-submit" style="background: #0284c7;">Publish Stats</button>
             </div>
 
+            <!-- Manage Gallery Box (PROFESSIONAL NEW LOOK) -->
             <div class="match-card">
-                <h3><i class="fas fa-images" style="color: #0284c7; margin-right: 8px;"></i> Manage Match Gallery</h3>
-                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Select pictures directly from your device to upload.</p>
-                <div class="form-group">
-                    <label>Select Image File:</label>
-                    <input type="file" id="galleryFileInput" accept="image/*" style="padding: 0.5rem; background: var(--bg-dark); border-radius: 6px;">
-                </div>
-                <button onclick="uploadDirectImage()" class="btn-submit" style="background: #25d366; margin-bottom: 1.5rem;"><i class="fas fa-upload"></i> Upload Selected Photo</button>
+                <h3><i class="fas fa-images" style="color: #0284c7; margin-right: 8px;"></i> Tournament Gallery</h3>
+                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Upload real-time match photos to the live website.</p>
                 
-                <label style="display:block; margin-bottom: 0.6rem; font-weight:600;">Current Images (Click to Remove):</label>
-                <div id="admin-gallery-preview" style="display: flex; gap: 10px; flex-wrap: wrap; background: var(--bg-dark); padding: 10px; border-radius: 8px; min-height: 50px;">
-                    </div>
+                <!-- Cloud Dropzone Box -->
+                <div class="upload-dropzone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click here to choose match photo</p>
+                    <span id="fileNameDisplay" class="file-selected-name" style="display: none;"></span>
+                    <input type="file" id="galleryFileInput" accept="image/*" onchange="displaySelectedName()">
+                </div>
+
+                <button onclick="uploadDirectImage()" class="btn-upload-prof"><i class="fas fa-paper-plane"></i> Upload to Gallery</button>
+                
+                <label style="display:block; margin-top: 1.8rem; margin-bottom: 0.6rem; font-weight:600;">Live Previews (Click image to delete):</label>
+                <div id="admin-gallery-preview" style="display: flex; gap: 10px; flex-wrap: wrap; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; min-height: 60px;">
+                    <!-- Firebase images show here -->
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Script for showing professional file name on select -->
+    <script>
+        function displaySelectedName() {
+            const input = document.getElementById('galleryFileInput');
+            const display = document.getElementById('fileNameDisplay');
+            if(input.files.length > 0) {
+                display.innerText = "Selected: " + input.files[0].name;
+                display.style.display = "block";
+            } else {
+                display.style.display = "none";
+            }
+        }
+    </script>
+
+    <!-- Firebase SDK Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
