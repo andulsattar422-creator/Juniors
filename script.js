@@ -1,5 +1,5 @@
 // ==========================================
-// FIREBASE INITIALIZATION
+// FIREBASE INITIALIZATION 
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyCST-OSQ31-ooEnhoqxRzsR8oNVzvP-nc8",
@@ -16,46 +16,78 @@ const db = firebase.firestore();
 const storage = firebase.storage();
 
 // ==========================================
-// THEME TOGGLE FUNCTIONALITY
+// FIXED: THEME TOGGLE FUNCTIONALITY
 // ==========================================
 const themeToggle = document.getElementById('theme-toggle');
 if (themeToggle) {
     themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('light-theme');
-        document.body.classList.toggle('dark-theme');
+        // Agar body me dark-theme hai to use hata kar light-theme laga dega aur vice versa
+        if (document.body.classList.contains('dark-theme')) {
+            document.body.classList.remove('dark-theme');
+            document.body.classList.add('light-theme');
+        } else {
+            document.body.classList.remove('light-theme');
+            document.body.classList.add('dark-theme');
+        }
+        
+        // Icon change karna (Sun / Moon)
+        const icon = themeToggle.querySelector('i');
+        if (document.body.classList.contains('light-theme')) {
+            icon.className = 'fas fa-sun';
+        } else {
+            icon.className = 'fas fa-moon';
+        }
     });
 }
 
 // ==========================================
-// ADMIN FUNCTIONS (Jahan se control hota hai)
+// ADMIN PANEL LOGIN
 // ==========================================
 function checkAdminPassword() {
-    if (document.getElementById('adminPassword').value === 'JuniorTeam') {
+    const passwordInput = document.getElementById('adminPassword').value;
+    const errorMsg = document.getElementById('login-error');
+    
+    if (passwordInput === 'JuniorTeam') {
         document.getElementById('login-overlay').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'block';
         loadAdminCurrentData();
         loadAdminGalleryPreview();
     } else {
-        document.getElementById('login-error').style.display = 'block';
+        errorMsg.style.display = 'block';
     }
 }
 
+// ==========================================
+// CLOUD DATABASE OPERATIONS (FIRESTORE)
+// ==========================================
 function savePointsTable() {
     const teamId = document.getElementById('updateTeamSelect').value;
+    const wins = parseInt(document.getElementById('teamWins').value) || 0;
+    const losses = parseInt(document.getElementById('teamLosses').value) || 0;
+    const points = parseInt(document.getElementById('teamPoints').value) || 0;
+
     db.collection("pointsTable").doc(teamId).set({
-        w: parseInt(document.getElementById('teamWins').value) || 0,
-        l: parseInt(document.getElementById('teamLosses').value) || 0,
-        pts: parseInt(document.getElementById('teamPoints').value) || 0,
-        p: (parseInt(document.getElementById('teamWins').value) || 0) + (parseInt(document.getElementById('teamLosses').value) || 0)
-    }).then(() => alert("Points Table Live Update Ho Gaya!"));
+        w: wins,
+        l: losses,
+        pts: points,
+        p: (wins + losses)
+    })
+    .then(() => alert("Points Table Cloud Par Save Ho Gaya!"))
+    .catch(err => alert("Error: " + err.message));
 }
 
 function saveMatchSchedule() {
+    const date = document.getElementById('matchDate').value;
+    const teams = document.getElementById('matchTeams').value;
+    const venue = document.getElementById('matchVenue').value;
+
     db.collection("schedule").doc("nextMatch").set({
-        date: document.getElementById('matchDate').value,
-        teams: document.getElementById('matchTeams').value,
-        venue: document.getElementById('matchVenue').value
-    }).then(() => alert("Match Fixture Live Update Ho Gaya!"));
+        date: date,
+        teams: teams,
+        venue: venue
+    })
+    .then(() => alert("Match Schedule Live Update Ho Gaya!"))
+    .catch(err => alert("Error: " + err.message));
 }
 
 function savePlayerStats() {
@@ -64,41 +96,78 @@ function savePlayerStats() {
         bat_runs: document.getElementById('topBatsmanRuns').value,
         bowl_name: document.getElementById('topBowlerName').value,
         bowl_wkt: document.getElementById('topBowlerWickets').value
-    }).then(() => alert("Stats Live Update Ho Gaye!"));
+    })
+    .then(() => alert("Player Stats Cloud Par Publish Ho Gaye!"))
+    .catch(err => alert("Error: " + err.message));
 }
 
-function uploadDirectImage() {
-    const file = document.getElementById('galleryFileInput').files[0];
-    if (!file) return alert("Pehle photo select karein!");
-    const storageRef = storage.ref('gallery/' + Date.now() + '_' + file.name);
-    
-    storageRef.put(file).then(snapshot => {
-        snapshot.ref.getDownloadURL().then(url => {
-            db.collection("gallery").doc("images").set({
-                urls: firebase.firestore.FieldValue.arrayUnion(url)
-            }, { merge: true }).then(() => {
-                document.getElementById('galleryFileInput').value = "";
-                loadAdminGalleryPreview();
-                alert("Photo Live Website Par Chali Gai!");
-            });
-        });
+function loadAdminCurrentData() {
+    db.collection("stats").doc("performers").get().then((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            document.getElementById('topBatsmanName').value = data.bat_name || "";
+            document.getElementById('topBatsmanRuns').value = data.bat_runs || "";
+            document.getElementById('topBowlerName').value = data.bowl_name || "";
+            document.getElementById('topBowlerWickets').value = data.bowl_wkt || "";
+        }
     });
 }
 
+// ==========================================
+// CLOUD FILE UPLOAD & STORAGE LOGIC (PHOTOS)
+// ==========================================
+function uploadDirectImage() {
+    const fileInput = document.getElementById('galleryFileInput');
+    const file = fileInput.files[0];
+
+    if (!file) { alert("Pehle koi tasveer select karein!"); return; }
+
+    const storageRef = storage.ref('gallery/' + Date.now() + '_' + file.name);
+    alert("Photo upload ho rahi hai, baraye meharbani intazar karein...");
+
+    storageRef.put(file).then((snapshot) => {
+        snapshot.ref.getDownloadURL().then((downloadURL) => {
+            db.collection("gallery").doc("images").set({
+                urls: firebase.firestore.FieldValue.arrayUnion(downloadURL)
+            }, { merge: true })
+            .then(() => {
+                fileInput.value = "";
+                loadAdminGalleryPreview();
+                alert("Tasveer Cloud Storage Par Kamyabi Se Upload Ho Gai!");
+            });
+        });
+    }).catch(err => alert("Upload failed: " + err.message));
+}
+
+function removeGalleryImage(url) {
+    if (confirm("Kya aap is tasveer ko delete karna chahte hain?")) {
+        db.collection("gallery").doc("images").update({
+            urls: firebase.firestore.FieldValue.arrayRemove(url)
+        })
+        .then(() => {
+            loadAdminGalleryPreview();
+            alert("Tasveer delete ho gai!");
+        });
+    }
+}
+
 function loadAdminGalleryPreview() {
-    const container = document.getElementById('admin-gallery-preview');
-    if (!container) return; container.innerHTML = "";
-    db.collection("gallery").doc("images").get().then(doc => {
+    const previewContainer = document.getElementById('admin-gallery-preview');
+    if (!previewContainer) return;
+    previewContainer.innerHTML = "";
+
+    db.collection("gallery").doc("images").get().then((doc) => {
         if (doc.exists && doc.data().urls) {
-            doc.data().urls.forEach(url => {
+            doc.data().urls.forEach((url) => {
                 const div = document.createElement('div');
-                div.innerHTML = `<img src="${url}" style="width:70px; height:55px; object-fit:cover; border-radius:4px;">`;
-                div.onclick = () => {
-                    if(confirm("Delete karein?")) {
-                        db.collection("gallery").doc("images").update({ urls: firebase.firestore.FieldValue.arrayRemove(url) }).then(() => loadAdminGalleryPreview());
-                    }
-                };
-                container.appendChild(div);
+                div.style.position = 'relative';
+                div.style.cursor = 'pointer';
+                div.innerHTML = `
+                    <img src="${url}" style="width:80px; height:60px; object-fit:cover; border-radius:4px; border:2px solid rgba(255,255,255,0.1);">
+                    <div style="position:absolute; top:-5px; right:-5px; background:#ef4444; color:white; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:10px;"><i class="fas fa-times"></i></div>
+                `;
+                div.onclick = () => removeGalleryImage(url);
+                previewContainer.appendChild(div);
             });
         }
     });
@@ -108,12 +177,15 @@ function loadAdminGalleryPreview() {
 // DYNAMIC LIVE DATA LOAD FOR VISITORS (INDEX.HTML)
 // ==========================================
 window.addEventListener('DOMContentLoaded', () => {
-    // 1. Points Table Load Karna
+    
     db.collection("pointsTable").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            let index = doc.id === "team_0" ? 0 : (doc.id === "team_1" ? 1 : 2);
-            const row = document.querySelectorAll('.points-table tbody tr')[index];
+            let rowIndex = 0;
+            if(doc.id === "team_1") rowIndex = 1;
+            if(doc.id === "team_2") rowIndex = 2;
+
+            const row = document.querySelectorAll('.points-table tbody tr')[rowIndex];
             if (row) {
                 row.cells[2].innerText = data.p || 0;
                 row.cells[3].innerText = data.w || 0;
@@ -123,42 +195,65 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 2. Next Match Details Load Karna
     db.collection("schedule").doc("nextMatch").get().then((doc) => {
-        const card = document.querySelector('.match-card');
-        if (card && doc.exists) {
+        const matchCard = document.querySelector('.match-card');
+        if (matchCard && doc.exists) {
             const data = doc.data();
-            card.querySelector('.match-date').innerHTML = `<i class="fas fa-calendar-alt"></i> ${data.date}`;
-            card.querySelector('.teams').innerText = data.teams;
-            card.querySelector('.venue').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${data.venue}`;
+            matchCard.querySelector('.match-date').innerHTML = `<i class="fas fa-calendar-alt"></i> ${data.date}`;
+            matchCard.querySelector('.teams').innerText = data.teams;
+            matchCard.querySelector('.venue').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${data.venue}`;
         }
     });
 
-    // 3. Stats Load Karna
     db.collection("stats").doc("performers").get().then((doc) => {
-        if (doc.exists) {
+        const statNames = document.querySelectorAll('.stat-name');
+        const statValues = document.querySelectorAll('.stat-value');
+        if (statNames.length > 0 && doc.exists) {
             const data = doc.data();
-            const names = document.querySelectorAll('.stat-name');
-            const values = document.querySelectorAll('.stat-value');
-            if(names[0]) { names[0].innerText = data.bat_name; values[0].innerText = data.bat_runs + " Runs"; }
-            if(names[1]) { names[1].innerText = data.bowl_name; values[1].innerText = data.bowl_wkt + " Wkts"; }
+            statNames[0].innerText = data.bat_name;
+            statValues[0].innerText = data.bat_runs;
+            statNames[1].innerText = data.bowl_name;
+            statValues[1].innerText = data.bowl_wkt;
         }
     });
 
-    // 4. Gallery Images Load Karna
-    const grid = document.getElementById('website-gallery-grid');
-    if (grid) {
-        grid.innerHTML = "";
+    const galleryGrid = document.getElementById('website-gallery-grid');
+    if (galleryGrid) {
+        galleryGrid.innerHTML = "";
         db.collection("gallery").doc("images").get().then((doc) => {
             if (doc.exists && doc.data().urls) {
                 doc.data().urls.forEach(url => {
-                    const div = document.createElement('div');
-                    div.style.borderRadius = "8px";
-                    div.style.overflow = "hidden";
-                    div.innerHTML = `<img src="${url}" style="width:100%; height:120px; object-fit:cover; display:block;">`;
-                    grid.appendChild(div);
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<img src="${url}" alt="Match Pic">`;
+                    galleryGrid.appendChild(item);
                 });
             }
         });
     }
 });
+
+// ==========================================
+// WHATSAPP FORM REGISTRATION
+// ==========================================
+const regForm = document.getElementById('registrationForm');
+if (regForm) {
+    regForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const teamName = document.getElementById('teamName').value;
+        const captainName = document.getElementById('captainName').value;
+        const contactNum = document.getElementById('contactNum').value;
+        const playerList = document.getElementById('playerList').value;
+
+        const whatsappMessage = `🏏 *NEW TEAM REGISTRATION* 🏏\n` +
+                                `----------------------------------\n` +
+                                `🏆 *Team Name:* ${teamName}\n` +
+                                `👤 *Captain:* ${captainName}\n` +
+                                `📞 *Contact:* ${contactNum}\n` +
+                                `👥 *Players:* \n${playerList}\n` +
+                                `----------------------------------`;
+
+        const whatsappUrl = `https://wa.me/923024337352?text=${encodeURIComponent(whatsappMessage)}`;
+        window.open(whatsappUrl, '_blank');
+    });
+}
