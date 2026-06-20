@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JCL - Secure Admin Dashboard</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dark-theme">
+
+    <!-- Password Login Section -->
+    <div id="login-overlay" style="position: fixed; top:0; left:0; width:100%; height:100%; background: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center;">
+        <div class="form-container" style="text-align: center; max-width: 450px;">
+            <h2>🔒 Admin Security Access</h2>
+            <p style="margin-bottom: 1.5rem; color: #94a3b8; font-size: 0.9rem;">Authorized access only. Enter password to manage dashboard.</p>
+            <div class="form-group">
+                <input type="password" id="adminPassword" placeholder="Enter Password" style="text-align: center; letter-spacing: 2px;">
+            </div>
+            <button onclick="checkAdminPassword()" class="btn-submit" style="background: #0284c7;">Unlock Control Panel</button>
+            <p id="login-error" style="color: #ef4444; margin-top: 12px; display: none; font-weight: bold;"><i class="fas fa-exclamation-circle"></i> Incorrect Password!</p>
+        </div>
+    </div>
+
+    <!-- Main Admin Dashboard -->
+    <div id="admin-dashboard" style="display: none; padding: 2rem 5%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+            <h2>🛠️ JCL Live Tournament Editor</h2>
+            <a href="./index.html" class="btn-primary" style="margin: 0; border-radius: 5px; padding: 0.6rem 1.2rem;">Exit & View Website</a>
+        </div>
+
+        <div class="schedule-grid">
+            <!-- Update Points Table Box -->
+            <div class="match-card">
+                <h3><i class="fas fa-chart-bar" style="color: #0284c7; margin-right: 8px;"></i> Points Table Standings</h3>
+                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Modify wins, losses, and overall standings.</p>
+                <div class="form-group">
+                    <label>Select Team:</label>
+                    <select id="updateTeamSelect" style="width:100%; padding:0.8rem; background: var(--bg-dark); color:white; border-radius:6px; border:1px solid rgba(255,255,255,0.2);">
+                        <option value="0">Lahore Tigers 🐯</option>
+                        <option value="1">Karachi Kings 👑</option>
+                        <option value="2">Islamabad United 🦁</option>
+                    </select>
+                </div>
+                <div class="form-group"><input type="number" id="teamWins" placeholder="Matches Won"></div>
+                <div class="form-group"><input type="number" id="teamLosses" placeholder="Matches Lost"></div>
+                <div class="form-group"><input type="number" id="teamPoints" placeholder="Total Points"></div>
+                <button onclick="savePointsTable()" class="btn-submit" style="background: #0284c7;">Apply Standings</button>
+            </div>
+
+            <!-- Update Schedule Box -->
+            <div class="match-card">
+                <h3><i class="fas fa-clock" style="color: #0284c7; margin-right: 8px;"></i> Next Match Details</h3>
+                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Update the upcoming match card instantly.</p>
+                <div class="form-group"><label>Match Day & Date:</label><input type="text" id="matchDate" placeholder="e.g. Sunday - 21 June"></div>
+                <div class="form-group"><label>Competing Teams:</label><input type="text" id="matchTeams" placeholder="e.g. Tigers vs Kings"></div>
+                <div class="form-group"><label>Ground Venue & Time:</label><input type="text" id="matchVenue" placeholder="e.g. Local Ground A - 4:00 PM"></div>
+                <button onclick="saveMatchSchedule()" class="btn-submit" style="background: #0284c7;">Update Fixture</button>
+            </div>
+
+            <!-- Update Stats Box -->
+            <div class="match-card">
+                <h3><i class="fas fa-trophy" style="color: #0284c7; margin-right: 8px;"></i> Tournament Performers</h3>
+                <p style="color: #94a3b8; font-size: 0.85rem; margin-bottom: 1.5rem;">Highlight the tournament top batsman and bowler.</p>
+                <div class="form-group"><label>Top Batsman Name:</label><input type="text" id="topBatsmanName"></div>
+                <div class="form-group"><label>Total Runs Scored:</label><input type="text" id="topBatsmanRuns"></div>
+                <div class="form-group"><label>Top Bowler Name:</label><input type="text" id="topBowlerName"></div>
+                <div class="form-group"><label>Total Wickets Taken:</label><input type="text" id="topBowlerWickets"></div>
+                <button onclick="savePlayerStats()" class="btn-submit" style="background: #0284c7;">Publish Stats</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
